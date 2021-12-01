@@ -32,3 +32,13 @@ func GetFile(file string) string {
 
 	return string(buf)
 }
+
+func GetFileNumbers(file string) []int {
+	s := FileScanner(file, bufio.ScanLines)
+	var n []int
+
+	for s.Scan() {
+		n = append(n, MustAtoi(s.Text()))
+	}
+	return n
+}
