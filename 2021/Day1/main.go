@@ -17,31 +17,18 @@ func part1(depths []int) {
 		c = d
 	}
 
-	log.Printf("increasing depths: %d", n)
-}
-
-func sum(d [3]int) int {
-	return d[0] + d[1] + d[2]
+	log.Printf("part1: increasing depths: %d", n)
 }
 
 func part2(depths []int) {
-
-	w := [3]int{}
 	d := 0
 	n := 0
-
 	for i := 0; i < len(depths)-2; i++ {
-		w = [3]int{
-			depths[i],
-			depths[i+1],
-			depths[i+2],
-		}
-		ss := sum(w)
+		ss := depths[i] + depths[i+1] + depths[i+2]
 		if d != 0 && ss > d {
 			n++
 		}
 		d = ss
-		log.Printf("it %d, w=%v, d=%d, ss=%d, n=%d", i, w, d, ss, n)
 	}
 	log.Printf("part 2, increasing depths: %d", n)
 }
