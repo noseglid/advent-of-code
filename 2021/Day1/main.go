@@ -30,13 +30,12 @@ func part2(depths []int) {
 		}
 		d = ss
 	}
+
 	log.Printf("part 2, increasing depths: %d", n)
 }
 
 func main() {
-
 	depths := util.GetFileNumbers("2021/Day1/input")
 	part1(depths)
-
 	part2(depths)
 }
