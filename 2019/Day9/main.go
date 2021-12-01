@@ -1,15 +1,12 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
 	"log"
 	"math"
-	"os"
 	"strings"
 
 	"github.com/noseglid/advent-of-code/util"
-	"github.com/sirupsen/logrus"
 )
 
 type Operator interface {
@@ -122,12 +119,8 @@ func (p *Program) run() {
 	copy(p.memory, p.refmem)
 
 	n := 0
-	r := bufio.NewReader(os.Stdin)
 	for {
-		logrus.Debugf("pc=%d, rb=%d memsize=%d", p.pc, p.relative, len(p.memory))
-		if logrus.IsLevelEnabled(logrus.DebugLevel) {
-			p.printMemory(p.pc)
-		}
+		log.Printf("pc=%d, rb=%d memsize=%d", p.pc, p.relative, len(p.memory))
 
 		pc, halt := p.operator(p.pc).Operate(p)
 		if halt {
@@ -135,10 +128,6 @@ func (p *Program) run() {
 		}
 
 		p.pc = pc
-		if logrus.IsLevelEnabled(logrus.DebugLevel) {
-			logrus.Debugf("(%d): press return to continue", n)
-			r.ReadLine()
-		}
 		n++
 	}
 
@@ -166,7 +155,7 @@ func (p *Program) programCounter() int {
 }
 
 func (p *Program) ensureMemory(size int) {
-	logrus.Debugf("ensuring memory %d (len=%d)", size, len(p.memory))
+	log.Printf("ensuring memory %d (len=%d)", size, len(p.memory))
 	if len(p.memory) > size {
 		return
 	}
@@ -197,7 +186,7 @@ func (p *Program) write(i, v int) {
 }
 
 func (p *Program) getInput() int {
-	logrus.Debugf("program getting input")
+	log.Printf("program getting input")
 	return <-p.input
 }
 
@@ -206,7 +195,7 @@ func (p *Program) final() int {
 }
 
 func (p *Program) writeOutput(v int) {
-	logrus.Debugf("program writing output %d", v)
+	log.Printf("program writing output %d", v)
 	p.output <- v
 }
 
@@ -226,7 +215,7 @@ type addop struct {
 func (o *addop) Operate(p *Program) (int, bool) {
 	v0 := p.value(o.params[0], o.paramMode(0))
 	v1 := p.value(o.params[1], o.paramMode(1))
-	logrus.Debugf("doing add with %d+%d=%d to %d", v0, v1, v0+v1, o.params[2])
+	log.Printf("doing add with %d+%d=%d to %d", v0, v1, v0+v1, o.params[2])
 	addr := p.paramAddr(o.params[2], o.paramMode(2))
 	p.write(addr, v0+v1)
 	return p.programCounter() + 4, false
@@ -239,7 +228,7 @@ type multop struct {
 func (o *multop) Operate(p *Program) (int, bool) {
 	v0 := p.value(o.params[0], o.paramMode(0))
 	v1 := p.value(o.params[1], o.paramMode(1))
-	logrus.Debugf("doing mult %d*%d=%d to %d", v0, v1, v0*v1, o.params[2])
+	log.Printf("doing mult %d*%d=%d to %d", v0, v1, v0*v1, o.params[2])
 	addr := p.paramAddr(o.params[2], o.paramMode(2))
 	p.write(addr, v0*v1)
 	return p.programCounter() + 4, false
@@ -250,7 +239,7 @@ type haltop struct {
 }
 
 func (o *haltop) Operate(p *Program) (int, bool) {
-	logrus.Debugf("halting")
+	log.Printf("halting")
 	return p.programCounter() + 1, true
 }
 
@@ -263,7 +252,7 @@ func (o *inputop) Operate(p *Program) (int, bool) {
 
 	addr := p.paramAddr(o.params[0], o.paramMode(0))
 	p.write(addr, input)
-	logrus.Debugf("getting input %d to addr=%d", input, addr)
+	log.Printf("getting input %d to addr=%d", input, addr)
 	return p.programCounter() + 2, false
 }
 
@@ -273,7 +262,7 @@ type outputop struct {
 
 func (o *outputop) Operate(p *Program) (int, bool) {
 	v0 := p.value(o.params[0], o.paramMode(0))
-	logrus.Debugf("writing output %d from (param=%d,mode=%d)", v0, o.params[0], o.paramMode(0))
+	log.Printf("writing output %d from (param=%d,mode=%d)", v0, o.params[0], o.paramMode(0))
 	p.writeOutput(v0)
 	return p.programCounter() + 2, false
 }
@@ -285,7 +274,7 @@ type jumpiftrue struct {
 func (o *jumpiftrue) Operate(p *Program) (int, bool) {
 	v0 := p.value(o.params[0], o.paramMode(0))
 	v1 := p.value(o.params[1], o.paramMode(1))
-	logrus.Debugf("jumping to %d if %d != 0", v1, v0)
+	log.Printf("jumping to %d if %d != 0", v1, v0)
 	if v0 != 0 {
 		return v1, false
 	} else {
@@ -299,7 +288,7 @@ type jumpiffalse struct {
 
 func (o *jumpiffalse) Operate(p *Program) (int, bool) {
 	v0 := p.value(o.params[0], o.paramMode(0))
-	logrus.Debugf("jumping if false: %d", v0)
+	log.Printf("jumping if false: %d", v0)
 	if v0 == 0 {
 		return p.value(o.params[1], o.paramMode(1)), false
 	} else {
@@ -318,7 +307,7 @@ func (o *lessthan) Operate(p *Program) (int, bool) {
 	if v0 < v1 {
 		v = 1
 	}
-	logrus.Debugf("lessthan %d < %d, writing %d to %d", v0, v1, v, o.params[2])
+	log.Printf("lessthan %d < %d, writing %d to %d", v0, v1, v, o.params[2])
 	addr := p.paramAddr(o.params[2], o.paramMode(2))
 	p.write(addr, v)
 	return p.programCounter() + 4, false
@@ -335,7 +324,7 @@ func (o *equals) Operate(p *Program) (int, bool) {
 	if v0 == v1 {
 		v = 1
 	}
-	logrus.Debugf("testing equals %d == %d, storing %d at %d", v0, v1, v, o.params[2])
+	log.Printf("testing equals %d == %d, storing %d at %d", v0, v1, v, o.params[2])
 	addr := p.paramAddr(o.params[2], o.paramMode(2))
 	p.write(addr, v)
 	return p.programCounter() + 4, false
@@ -347,13 +336,12 @@ type relativebase struct {
 
 func (o relativebase) Operate(p *Program) (int, bool) {
 	v0 := p.value(o.params[0], o.paramMode(0))
-	logrus.Debugf("modifying relative base (param=%d, mode=%d) with %d", o.params[0], o.paramMode(0), v0)
+	log.Printf("modifying relative base (param=%d, mode=%d) with %d", o.params[0], o.paramMode(0), v0)
 	p.relative += v0
 	return p.programCounter() + 2, false
 }
 
 func main() {
-	// logrus.SetLevel(logrus.DebugLevel)
 	s := util.GetFile("2019/Day9/input")
 
 	var memory []int

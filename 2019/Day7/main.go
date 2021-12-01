@@ -7,7 +7,6 @@ import (
 	"sync"
 
 	"github.com/noseglid/advent-of-code/util"
-	"github.com/sirupsen/logrus"
 )
 
 type Operator interface {
@@ -101,7 +100,7 @@ func (p *Program) run() {
 	copy(p.memory, p.refmem)
 
 	for {
-		logrus.Debugf("pc=%d, memory: %v", p.pc, p.memory)
+		log.Printf("pc=%d, memory: %v", p.pc, p.memory)
 		pc, halt := p.operator(p.pc).Operate(p)
 		if halt {
 			break
@@ -131,7 +130,7 @@ func (p *Program) write(i, v int) {
 }
 
 func (p *Program) getInput() int {
-	logrus.Debugf("program %d getting input", p.id)
+	log.Printf("program %d getting input", p.id)
 	return <-p.input
 }
 
@@ -140,7 +139,7 @@ func (p *Program) final() int {
 }
 
 func (p *Program) writeOutput(v int) {
-	logrus.Debugf("program %d writing output %d", p.id, v)
+	log.Printf("program %d writing output %d", p.id, v)
 	p.output <- v
 }
 
@@ -160,7 +159,7 @@ type addop struct {
 func (o *addop) Operate(p *Program) (int, bool) {
 	v0 := p.value(o.params[0], o.paramMode(0))
 	v1 := p.value(o.params[1], o.paramMode(1))
-	logrus.Debugf("doing add with %d + %d", v0, v1)
+	log.Printf("doing add with %d + %d", v0, v1)
 	p.write(o.params[2], v0+v1)
 	return p.programCounter() + 4, false
 }
@@ -172,7 +171,7 @@ type multop struct {
 func (o *multop) Operate(p *Program) (int, bool) {
 	v0 := p.value(o.params[0], o.paramMode(0))
 	v1 := p.value(o.params[1], o.paramMode(1))
-	logrus.Debugf("doing mult %d + %d", v0, v1)
+	log.Printf("doing mult %d + %d", v0, v1)
 	p.write(o.params[2], v0*v1)
 	return p.programCounter() + 4, false
 }
@@ -182,7 +181,7 @@ type haltop struct {
 }
 
 func (o *haltop) Operate(p *Program) (int, bool) {
-	logrus.Debugf("halting")
+	log.Printf("halting")
 	return p.programCounter() + 1, true
 }
 
@@ -191,7 +190,7 @@ type inputop struct {
 }
 
 func (o *inputop) Operate(p *Program) (int, bool) {
-	logrus.Debugf("getting input")
+	log.Printf("getting input")
 	p.write(o.params[0], p.getInput())
 	return p.programCounter() + 2, false
 }
@@ -202,7 +201,7 @@ type outputop struct {
 
 func (o *outputop) Operate(p *Program) (int, bool) {
 	v0 := p.value(o.params[0], o.paramMode(0))
-	logrus.Debugf("writing output %d from %d (mode=%d)", v0, o.params[0], o.paramMode(0))
+	log.Printf("writing output %d from %d (mode=%d)", v0, o.params[0], o.paramMode(0))
 	p.writeOutput(v0)
 	return p.programCounter() + 2, false
 }
@@ -212,7 +211,7 @@ type jumpiftrue struct {
 }
 
 func (o *jumpiftrue) Operate(p *Program) (int, bool) {
-	logrus.Debugf("jumping if true")
+	log.Printf("jumping if true")
 	v0 := p.value(o.params[0], o.paramMode(0))
 	if v0 != 0 {
 		return p.value(o.params[1], o.paramMode(1)), false
@@ -226,7 +225,7 @@ type jumpiffalse struct {
 }
 
 func (o *jumpiffalse) Operate(p *Program) (int, bool) {
-	logrus.Debugf("jumping if false")
+	log.Printf("jumping if false")
 	v0 := p.value(o.params[0], o.paramMode(0))
 	if v0 == 0 {
 		return p.value(o.params[1], o.paramMode(1)), false
@@ -240,7 +239,7 @@ type lessthan struct {
 }
 
 func (o *lessthan) Operate(p *Program) (int, bool) {
-	logrus.Debugf("testing less than")
+	log.Printf("testing less than")
 	v0 := p.value(o.params[0], o.paramMode(0))
 	v1 := p.value(o.params[1], o.paramMode(1))
 	v := 0
@@ -262,7 +261,7 @@ func (o *equals) Operate(p *Program) (int, bool) {
 	if v0 == v1 {
 		v = 1
 	}
-	logrus.Debugf("testing equals %d == %d, storing %d at %d", v0, v1, v, o.params[2])
+	log.Printf("testing equals %d == %d, storing %d at %d", v0, v1, v, o.params[2])
 	p.write(o.params[2], v)
 	return p.programCounter() + 4, false
 }
