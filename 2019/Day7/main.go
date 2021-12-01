@@ -267,7 +267,6 @@ func (o *equals) Operate(p *Program) (int, bool) {
 }
 
 func main() {
-	// logrus.SetLevel(logrus.DebugLevel)
 	s := util.GetFile("2019/Day7/input")
 
 	var memory []int

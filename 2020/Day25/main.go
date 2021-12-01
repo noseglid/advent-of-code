@@ -8,8 +8,7 @@ func findPrivateKey(sub, pub int) int {
 	key := 1
 	loopSize := 0
 	for key != pub {
-		key = key * sub
-		key = key % 20201227
+		key = (key * sub) % 20201227
 		loopSize++
 	}
 
