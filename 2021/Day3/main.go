@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"math"
 	"strconv"
 
 	"github.com/noseglid/advent-of-code/util"
@@ -46,7 +47,11 @@ func part1() {
 		}
 	}
 
+	g, _ := strconv.ParseUint(gamma, 2, 64)
+	mask := uint64(math.MaxInt64 >> (64 - len(lines[0])))
+
 	log.Printf("Part 1: gamma*epsilon: %d", binstringmult(gamma, epsilon))
+	log.Printf("Part 1: gamma*epsilon bitwise: %d", g*(^g&mask))
 }
 
 func oxygen(bits []rune) []int {
