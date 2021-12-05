@@ -28,3 +28,18 @@ func permInt(a []int, f func([]int), i int) {
 		a[i], a[j] = a[j], a[i]
 	}
 }
+
+func MinInt(a, b int) int {
+	if a < b {
+		return a
+	}
+	return b
+}
+
+func MaxInt(a, b int) int {
+	if a > b {
+		return a
+	}
+
+	return b
+}
