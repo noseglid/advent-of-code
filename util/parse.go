@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"strings"
 )
 
 func FileScanner(file string, split bufio.SplitFunc) *bufio.Scanner {
@@ -51,4 +52,16 @@ func GetFileNumbers(file string) []int {
 		n = append(n, MustAtoi(s.Text()))
 	}
 	return n
+}
+
+func GetCSVFileNumbers(file string) []int {
+	t := GetFile(file)
+	ll := strings.Split(t, ",")
+
+	var ii []int
+	for _, l := range ll {
+		ii = append(ii, MustAtoi(strings.TrimSpace(l)))
+	}
+
+	return ii
 }
