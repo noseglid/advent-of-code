@@ -1,5 +1,7 @@
 package util
 
+import "math"
+
 func Factorial(i int) int {
 	result := 1
 	for i > 0 {
@@ -29,6 +31,13 @@ func permInt(a []int, f func([]int), i int) {
 	}
 }
 
+func Absolute(i int) int {
+	if i < 0 {
+		return -i
+	}
+	return i
+}
+
 func MinInt(a, b int) int {
 	if a < b {
 		return a
@@ -42,4 +51,24 @@ func MaxInt(a, b int) int {
 	}
 
 	return b
+}
+
+func MaxIntList(a []int) int {
+	m := math.MinInt64
+	for _, n := range a {
+		if n > m {
+			m = n
+		}
+	}
+	return m
+}
+
+func MinIntList(a []int) int {
+	m := math.MaxInt64
+	for _, n := range a {
+		if n < m {
+			m = n
+		}
+	}
+	return m
 }
