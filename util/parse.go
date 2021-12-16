@@ -65,3 +65,16 @@ func GetCSVFileNumbers(file string) []int {
 
 	return ii
 }
+
+func GetFileSingleDigitGrid(file string) [][]int {
+	grid := [][]int{}
+	lines := GetFileStrings(file)
+	for _, l := range lines {
+		row := make([]int, len(l))
+		for x, r := range l {
+			row[x] = MustAtoi(string(r))
+		}
+		grid = append(grid, row)
+	}
+	return grid
+}
