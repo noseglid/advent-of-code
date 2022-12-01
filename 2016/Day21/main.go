@@ -36,7 +36,7 @@ type reverseOperation struct {
 
 func (o reverseOperation) Exec(s string) string {
 	rr := []rune(s)[:o.x]
-	rr = append(rr, []rune(util.Reverse(s[o.x:o.y+1]))...)
+	rr = append(rr, []rune(util.ReverseString(s[o.x:o.y+1]))...)
 	if o.y < len(s) {
 		rr = append(rr, []rune(s[o.y+1:])...)
 	}

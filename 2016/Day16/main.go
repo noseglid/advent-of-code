@@ -27,7 +27,7 @@ func checksum(s string) string {
 }
 
 func dragon(s string) string {
-	b := util.Reverse(s)
+	b := util.ReverseString(s)
 	var n []rune
 	for _, r := range b {
 		n = append(n, rune(util.Absolute(int(r-'0'-1))+'0'))
