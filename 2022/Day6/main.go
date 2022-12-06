@@ -19,7 +19,8 @@ func startOfX(l []rune) bool {
 
 func main() {
 	// input := "nppdvjthqldpwncqszvftbrmjlhg"
-	input := util.GetFile("2022/Day6/input")
+	// input := util.GetFile("2022/Day6/input")
+	input := util.MustDailyInput(2022, 6)
 
 	p, m := false, false
 	for i := 3; i < len(input); i++ {
