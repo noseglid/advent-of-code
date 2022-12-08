@@ -1,6 +1,10 @@
 package util
 
-import "math"
+import (
+	"math"
+
+	"golang.org/x/exp/constraints"
+)
 
 func Factorial(i int) int {
 	result := 1
@@ -65,13 +69,25 @@ func permInt(a []int, f func([]int), i int) {
 	}
 }
 
-func Absolute(i int) int {
+func Absolute[T constraints.Integer | constraints.Float](i T) T {
 	if i < 0 {
 		return -i
 	}
 	return i
 }
+func Min[T constraints.Integer | constraints.Float](i, j T) T {
+	if i < j {
+		return i
+	}
+	return j
+}
 
+func Max[T constraints.Integer | constraints.Float](i, j T) T {
+	if i > j {
+		return i
+	}
+	return j
+}
 func MinInt(a, b int) int {
 	if a < b {
 		return a
