@@ -75,18 +75,25 @@ func Absolute[T constraints.Integer | constraints.Float](i T) T {
 	}
 	return i
 }
-func Min[T constraints.Integer | constraints.Float](i, j T) T {
-	if i < j {
-		return i
+
+func Min[T constraints.Integer | constraints.Float](i T, j ...T) T {
+	min := i
+	for _, t := range j {
+		if t < min {
+			min = t
+		}
 	}
-	return j
+	return min
 }
 
-func Max[T constraints.Integer | constraints.Float](i, j T) T {
-	if i > j {
-		return i
+func Max[T constraints.Integer | constraints.Float](i T, j ...T) T {
+	max := i
+	for _, t := range j {
+		if t > max {
+			max = t
+		}
 	}
-	return j
+	return max
 }
 func MinInt(a, b int) int {
 	if a < b {

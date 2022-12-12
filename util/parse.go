@@ -78,3 +78,16 @@ func GetFileSingleDigitGrid(file string) [][]int {
 	}
 	return grid
 }
+
+func GetFileRuneGrid(file string) [][]rune {
+	grid := [][]rune{}
+	lines := GetFileStrings(file)
+	for _, l := range lines {
+		row := make([]rune, len(l))
+		for x, r := range l {
+			row[x] = r
+		}
+		grid = append(grid, row)
+	}
+	return grid
+}
