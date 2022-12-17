@@ -86,8 +86,8 @@ func Min[T constraints.Integer | constraints.Float](i T, j ...T) T {
 	return min
 }
 
-func Max[T constraints.Integer | constraints.Float](i T, j ...T) T {
-	max := i
+func Max[T constraints.Integer | constraints.Float](j ...T) T {
+	max := j[0]
 	for _, t := range j {
 		if t > max {
 			max = t

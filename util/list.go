@@ -96,3 +96,13 @@ func (c *CircularDoubleLinkedList[T]) Len() int {
 	c.Each(func(t T) { n++ })
 	return n
 }
+
+func Contains[T comparable](list []T, el T) bool {
+	for _, l := range list {
+		if l == el {
+			return true
+		}
+	}
+
+	return false
+}
