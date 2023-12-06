@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"strconv"
 	"strings"
 )
 
@@ -90,4 +91,16 @@ func GetFileRuneGrid(file string) [][]rune {
 		grid = append(grid, row)
 	}
 	return grid
+}
+
+func NumberList(s string) []int {
+	numbers := []int{}
+	for _, s := range strings.Split(s, " ") {
+		if s == "" {
+			continue
+		}
+		n, _ := strconv.Atoi(s)
+		numbers = append(numbers, n)
+	}
+	return numbers
 }
