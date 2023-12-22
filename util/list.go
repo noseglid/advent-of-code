@@ -19,3 +19,17 @@ func RemoveByValue[T comparable](list []T, el T) ([]T, bool) {
 	}
 	return list, false
 }
+
+func Unique[T comparable](list []T) []T {
+	set := map[T]struct{}{}
+	for _, el := range list {
+		set[el] = struct{}{}
+	}
+
+	unq := []T{}
+	for el := range set {
+		unq = append(unq, el)
+	}
+
+	return unq
+}
