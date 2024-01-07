@@ -26,6 +26,7 @@ func start(grid [][]rune) P {
 	}
 	panic("no start")
 }
+
 func step(grid [][]rune, steps int, p P, memo map[MEntry]bool) {
 	e := MEntry{row: p.row, col: p.col, s: steps}
 	hasVisited := memo[e]
@@ -49,6 +50,51 @@ func step(grid [][]rune, steps int, p P, memo map[MEntry]bool) {
 	}
 }
 
+func p2(grid [][]rune) int {
+
+	maxSteps := 26501365
+	nodes := []P{start(grid)}
+	dirs := []P{
+		{row: -1, col: 0}, {row: 0, col: -1}, {row: 0, col: 1}, {row: 1, col: 0},
+	}
+
+	polynomial := make([]int, 0)
+	for steps := 0; steps < maxSteps; steps++ {
+		nextNodes := []P{}
+		visited := map[P]bool{}
+
+		for len(nodes) > 0 {
+			element := nodes[0]
+			nodes = nodes[1:]
+			for _, d := range dirs {
+				newPos := P{row: element.row + d.row, col: element.col + d.col}
+
+				tr := ((newPos.col % len(grid)) + len(grid)) % len(grid)
+				tc := ((newPos.row % len(grid)) + len(grid)) % len(grid)
+				if grid[tr][tc] != '#' && !visited[newPos] {
+					visited[newPos] = true
+					nextNodes = append(nextNodes, newPos)
+				}
+			}
+		}
+
+		nodes = nextNodes
+		if (steps+1)%(len(grid)) == maxSteps%len(grid) {
+			polynomial = append(polynomial, len(visited))
+
+			if len(polynomial) == 3 {
+				p0 := polynomial[0]
+				p1 := polynomial[1] - polynomial[0]
+				p2 := polynomial[2] - polynomial[1]
+
+				return p0 + (p1 * (maxSteps / len(grid))) + ((maxSteps/len(grid))*((maxSteps/len(grid))-1)/2)*(p2-p1)
+			}
+		}
+	}
+
+	panic("invalid")
+}
+
 func main() {
 	grid := util.GetFileRuneGrid("2023/Day21/input")
 	s := start(grid)
@@ -66,5 +112,6 @@ func main() {
 		}
 	}
 	fmt.Printf("Total grid reached (part1): %d\n", n)
+	fmt.Printf("Total reached in infinite grid (part2): %d\n", p2(grid))
 
 }
