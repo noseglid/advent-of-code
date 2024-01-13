@@ -20,6 +20,10 @@ func RemoveByValue[T comparable](list []T, el T) ([]T, bool) {
 	return list, false
 }
 
+func RemoveByIndex[T any](list []T, index int) []T {
+	return append(list[:index], list[index+1:]...)
+}
+
 func Unique[T comparable](list []T) []T {
 	set := map[T]struct{}{}
 	for _, el := range list {
