@@ -3,9 +3,10 @@ package util
 type Grid [][]rune
 
 type Dir int
+type RelDir int
 
 const (
-	N = iota
+	N Dir = iota
 	NE
 	E
 	SE
@@ -13,6 +14,33 @@ const (
 	SW
 	W
 	NW
+)
+
+func (d Dir) String() string {
+	switch d {
+	case N:
+		return "N"
+	case NE:
+		return "NE"
+	case E:
+		return "E"
+	case SE:
+		return "SE"
+	case S:
+		return "S"
+	case SW:
+		return "SW"
+	case W:
+		return "W"
+	case NW:
+		return "NW"
+	}
+	panic("bad dir")
+}
+
+const (
+	Right RelDir = iota
+	Left
 )
 
 func (d Dir) Deltas() (int, int) {
@@ -35,6 +63,36 @@ func (d Dir) Deltas() (int, int) {
 		return -1, 1
 	}
 	panic("bad dir")
+}
+
+func (d Dir) Turn(rd RelDir) Dir {
+	switch d {
+	case N:
+		if rd == Left {
+			return W
+		} else {
+			return E
+		}
+	case E:
+		if rd == Left {
+			return N
+		} else {
+			return S
+		}
+	case S:
+		if rd == Left {
+			return E
+		} else {
+			return W
+		}
+	case W:
+		if rd == Left {
+			return S
+		} else {
+			return N
+		}
+	}
+	panic("Bad dir")
 }
 
 func VDir(r rune) Dir {
@@ -69,6 +127,9 @@ func (g Grid) Find(r rune) (int, int) {
 
 func (g Grid) Get(x, y int) rune {
 	return g[y][x]
+}
+func (g Grid) Set(x, y int, r rune) {
+	g[y][x] = r
 }
 
 func (g Grid) Each(f func(x, y int, r rune)) {
