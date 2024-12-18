@@ -163,6 +163,10 @@ func (g Grid) GetMove(x, y int, d Dir) (int, int) {
 	panic("bad dir")
 }
 
+func (g Grid) InBounds(x, y int) bool {
+	return y >= 0 && y < len(g) && x >= 0 && x < len(g[y])
+}
+
 func (g *Grid) Switch(ax, ay, bx, by int) {
 	gg := [][]rune(*g)
 	gg[by][bx], gg[ay][ax] = gg[ay][ax], gg[by][bx]
