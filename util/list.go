@@ -37,3 +37,11 @@ func Unique[T comparable](list []T) []T {
 
 	return unq
 }
+
+func Repeat[T any](el T, count int) []T {
+	r := []T{}
+	for i := 0; i < count; i++ {
+		r = append(r, el)
+	}
+	return r
+}

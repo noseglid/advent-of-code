@@ -133,28 +133,7 @@ func (g Grid) Set(x, y int, r rune) {
 }
 
 func (g Grid) ShortestPath(start, end Point, isMovable func(x, y int, r rune) bool) (int, []Point, bool) {
-	unvisited := []Point{end}
-	nodes := map[Point]int{
-		end: 0,
-	}
-
-	for len(unvisited) > 0 {
-		n := unvisited[0]
-		for _, m := range []Dir{N, E, S, W} {
-			rx, ry := g.GetMove(n.X, n.Y, m)
-			pp := Point{rx, ry}
-			if g.InBounds(rx, ry) && (pp == start || isMovable(rx, ry, g.Get(rx, ry))) {
-				in := Point{rx, ry}
-				if v, ok := nodes[in]; !ok {
-					nodes[in] = nodes[n] + 1
-					unvisited = append(unvisited, in)
-				} else if nodes[n]+1 < v {
-					nodes[in] = v
-				}
-			}
-		}
-		unvisited = unvisited[1:]
-	}
+	nodes := g.ShortestPathNodes(start, end, isMovable)
 
 	var path []Point
 	current := start
@@ -178,6 +157,33 @@ Outer:
 	path = append(path, end)
 
 	return nodes[start], path, true
+}
+
+func (g Grid) ShortestPathNodes(start, end Point, isMovable func(x, y int, r rune) bool) map[Point]int {
+	unvisited := []Point{end}
+	nodes := map[Point]int{
+		end: 0,
+	}
+
+	for len(unvisited) > 0 {
+		n := unvisited[0]
+		for _, m := range []Dir{N, E, S, W} {
+			rx, ry := g.GetMove(n.X, n.Y, m)
+			pp := Point{rx, ry}
+			if g.InBounds(rx, ry) && (pp == start || isMovable(rx, ry, g.Get(rx, ry))) {
+				in := Point{rx, ry}
+				if v, ok := nodes[in]; !ok {
+					nodes[in] = nodes[n] + 1
+					unvisited = append(unvisited, in)
+				} else if nodes[n]+1 < v {
+					nodes[in] = v
+				}
+			}
+		}
+		unvisited = unvisited[1:]
+	}
+
+	return nodes
 }
 
 func (g Grid) Each(f func(x, y int, r rune)) {
