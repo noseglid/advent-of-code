@@ -11,6 +11,11 @@ func (p *Point) Set(x, y int) {
 	p.Y = y
 }
 
+func (p Point) Move(dir Dir) Point {
+	dx, dy := dir.Deltas()
+	return Point{p.X + dx, p.Y + dy}
+}
+
 func (p Point) String() string {
 	return fmt.Sprintf("(%d,%d)", p.X, p.Y)
 }
