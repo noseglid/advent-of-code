@@ -122,7 +122,7 @@ func (g Grid) Find(r rune) (int, int) {
 			}
 		}
 	}
-	panic("no find")
+	return -1, -1
 }
 
 func (g Grid) Get(x, y int) rune {

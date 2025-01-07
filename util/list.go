@@ -10,6 +10,12 @@ func Contains[T comparable](list []T, el T) bool {
 	return false
 }
 
+func CopySlice[T any](list []T) []T {
+	r := make([]T, len(list))
+	copy(r, list)
+	return r
+}
+
 func RemoveByValue[T comparable](list []T, el T) ([]T, bool) {
 	for i, l := range list {
 		if el == l {
