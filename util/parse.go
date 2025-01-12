@@ -2,7 +2,7 @@ package util
 
 import (
 	"bufio"
-	"io/ioutil"
+	"io"
 	"log"
 	"os"
 	"strconv"
@@ -27,7 +27,7 @@ func GetFile(file string) string {
 		log.Fatal(err)
 	}
 
-	buf, err := ioutil.ReadAll(f)
+	buf, err := io.ReadAll(f)
 	if err != nil {
 		log.Fatal(err)
 	}
