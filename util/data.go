@@ -3,7 +3,6 @@ package util
 import (
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"os"
 	"path"
@@ -23,7 +22,7 @@ func cacheDir() string {
 }
 
 func mustGetAOCSession() string {
-	session, err := ioutil.ReadFile(path.Join(cfgDir(), "session"))
+	session, err := os.ReadFile(path.Join(cfgDir(), "session"))
 	if err != nil {
 		panic(err)
 	}
