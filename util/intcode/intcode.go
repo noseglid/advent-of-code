@@ -38,24 +38,66 @@ type state struct {
 }
 
 type Program struct {
-	pc       int
-	relative int
-	refmem   []int
-	memory   []int
-	Input    chan int
-	Output   chan int
+	pc           int
+	relative     int
+	refmem       []int
+	memory       []int
+	RequestInput chan struct{}
+	Input        chan int
+	Output       chan int
 
 	stateStack []state
 }
 
-func NewProgram(memory []int) *Program {
-	return &Program{
+type programConfig struct {
+	inputBuffer  int
+	outputBuffer int
+	pingForInput bool
+}
+
+type Opt func(pc *programConfig)
+
+func WithInputBuffer(buf int) Opt {
+	return func(pc *programConfig) {
+		pc.inputBuffer = buf
+	}
+}
+
+func WithOutputBuffer(buf int) Opt {
+	return func(pc *programConfig) {
+		pc.outputBuffer = buf
+	}
+}
+
+func WithPingForInput(v bool) Opt {
+	return func(pc *programConfig) {
+		pc.pingForInput = v
+	}
+}
+
+func NewProgram(memory []int, opts ...Opt) *Program {
+	cfg := programConfig{
+		inputBuffer:  512,
+		outputBuffer: 512,
+		pingForInput: false,
+	}
+
+	for _, o := range opts {
+		o(&cfg)
+	}
+	p := &Program{
 		pc:     0,
 		refmem: memory,
 		memory: nil,
-		Input:  make(chan int, 512),
-		Output: make(chan int, 512),
+		Input:  make(chan int, cfg.inputBuffer),
+		Output: make(chan int, cfg.outputBuffer),
 	}
+
+	if cfg.pingForInput {
+		p.RequestInput = make(chan struct{})
+	}
+
+	return p
 }
 
 func (p *Program) Reset() {
@@ -204,6 +246,9 @@ func (p *Program) write(i, v int) {
 }
 
 func (p *Program) getInput() int {
+	if p.RequestInput != nil {
+		p.RequestInput <- struct{}{}
+	}
 	return <-p.Input
 }
 
