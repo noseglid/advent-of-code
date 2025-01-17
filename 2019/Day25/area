@@ -1,0 +1,38 @@
+
+     3
+     |
+   4-2  7-6
+     |    |
+     1----5----B-----C-----D
+     |               |
+     0----8----9  G--E-----F
+     |            |
+     A          I-H
+
+
+1: spool of cat6
+2: monolith
+3: hypercube
+4: planetoid
+5:
+6: candycane
+7: photons
+8:
+9:
+A: fixed point
+B: easter egg
+C: escape pod
+D: molten lava
+E: ornament
+F: infinite loop
+G: 
+H:
+I: <<Pressure plate>>
+
+
+// Needed for pressure plate
+Ornament
+Hypercube
+Monolith
+Easteregg
+
