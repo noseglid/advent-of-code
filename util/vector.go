@@ -23,6 +23,18 @@ func (p Point) String() string {
 	return fmt.Sprintf("(%d,%d)", p.X, p.Y)
 }
 
+func PointFrom(s string) Point {
+	var p Point
+	n, err := fmt.Sscanf(s, "%d,%d", &p.X, &p.Y)
+	if err != nil {
+		panic(err)
+	}
+	if n != 2 {
+		panic("invalid point: " + s)
+	}
+	return p
+}
+
 func Point3DFrom(s string) Point3D {
 	var p Point3D
 	n, err := fmt.Sscanf(s, "%d,%d,%d", &p.X, &p.Y, &p.Z)

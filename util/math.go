@@ -150,3 +150,14 @@ func MinIntList(a []int) int {
 	}
 	return m
 }
+
+func MakePairs[T any](list []T) []Tuple[T, T] {
+	var pairs []Tuple[T, T]
+
+	for i := 0; i < len(list); i++ {
+		for j := i + 1; j < len(list); j++ {
+			pairs = append(pairs, Tuple[T, T]{X: list[i], Y: list[j]})
+		}
+	}
+	return pairs
+}
